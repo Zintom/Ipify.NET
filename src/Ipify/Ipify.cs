@@ -14,27 +14,29 @@ namespace Ipify
     public static class Ipify
     {
         /// <summary>
-        /// Resolves the public IP address and returns it as a string.
+        /// Resolves the public IP address and returns it as a <see cref="string"/>.
         /// </summary>
         /// <param name="useHttps">
         /// Specifies whether to use HTTPS to talk to ipify.org (defaults to
-        /// <b>false</b> if omitted).
+        /// <b>true</b> if omitted).
         /// </param>
         /// <returns>
-        /// A string containing the IP address, or an empty string if an error is
+        /// A <see cref="string"/> containing the public IP address, or <see cref="string.Empty"/> if an error is
         /// encountered.
         /// </returns>
-        public static string GetPublicAddress(bool useHttps = false)
+        public static string GetPublicIPAddressString(bool useHttps = true)
         {
             var endpoint = useHttps ? "https://api.ipify.org" : "http://api.ipify.org";
-            WebClient client = new WebClient();
-            try
+            using (var client = new WebClient())
             {
-                return client.DownloadString(endpoint);
-            }
-            catch
-            {
-                return string.Empty;
+                try
+                {
+                    return client.DownloadString(endpoint);
+                }
+                catch
+                {
+                    return string.Empty;
+                }
             }
         }
 
@@ -44,22 +46,21 @@ namespace Ipify
         /// </summary>
         /// <param name="useHttps">
         /// Specifies whether to use HTTPS to talk to ipify.org (defaults to
-        /// <b>false</b> if omitted).
+        /// <b>true</b> if omitted).
         /// </param>
         /// <returns>
-        /// An instance of <see cref="IPAddress" />. If an error occures, then
-        /// <see cref="IPAddress.None" /> is returned.
+        /// An instance of <see cref="IPAddress" /> containing the public IP address, or <see cref="IPAddress.None" /> if an error is
         /// encountered.
         /// </returns>
-        public static IPAddress GetPublicIPAddress(bool useHttps = false)
+        public static IPAddress GetPublicIPAddress(bool useHttps = true)
         {
-            string address = GetPublicAddress(useHttps);
-            IPAddress ipAddress;
-            if (!IPAddress.TryParse(address, out ipAddress))
+            if (!IPAddress.TryParse(GetPublicIPAddressString(useHttps), out IPAddress ipAddress))
             {
                 return IPAddress.None;
             }
+
             return ipAddress;
         }
+
     }
 }

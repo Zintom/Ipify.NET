@@ -15,17 +15,13 @@ namespace Ipify.Tests
         [Test]
         public void GetAddress_ReturnsStringContainingAnIPAddress()
         {
-            string ip = Ipify.GetPublicAddress();
-            IPAddress ipAddress;
-            Assert.IsTrue(IPAddress.TryParse(ip, out ipAddress));
+            Assert.IsTrue(IPAddress.TryParse(Ipify.GetPublicIPAddressString(), out _));
         }
 
         [Test]
-        public void GetAddress_ReturnsStringContainingAnIPAddressUsingHttps()
+        public void GetAddress_ReturnsStringContainingAnIPAddressUsingHttp()
         {
-            string ip = Ipify.GetPublicAddress(true);
-            IPAddress ipAddress;
-            Assert.IsTrue(IPAddress.TryParse(ip, out ipAddress));
+            Assert.IsTrue(IPAddress.TryParse(Ipify.GetPublicIPAddressString(false), out _));
         }
 
         [Test]
@@ -37,9 +33,9 @@ namespace Ipify.Tests
         }
 
         [Test]
-        public void GetIPAddress_ReturnsIPAddressInstanceUsingHttps()
+        public void GetIPAddress_ReturnsIPAddressInstanceUsingHttp()
         {
-            IPAddress ipAddress = Ipify.GetPublicIPAddress(true);
+            IPAddress ipAddress = Ipify.GetPublicIPAddress(false);
             Assert.IsNotNull(ipAddress);
             Assert.AreNotEqual(IPAddress.None, ipAddress);
         }
